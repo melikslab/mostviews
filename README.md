@@ -1,4 +1,6 @@
 # mostviews
-Module to show products and sellers most visited at last month.
+Module for prestashop
+
+Show widget of products and sellers most visited at last month.
 
 This module is under development.
