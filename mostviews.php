@@ -65,9 +65,9 @@ class mostviews extends Module
     public function getValues()
     {
 
-        $manufacturer = $this->getManufacturerMostView(1, 3);
+        $manufacturer = $this->getManufacturerMostView(3, 3);
 
-        $product = $this->getProductMostView(1, 3); 
+        $product = $this->getProductMostView(3, 3); 
 
         $this->context->smarty->assign(array(
             'products' => $product,
@@ -99,7 +99,7 @@ class mostviews extends Module
     */
     private function getProductMostView($limit, $id_lang) {
 
-        $sql = 'SELECT SUM(pv.counter) AS total, pr.*, p.*,i.id_image, m.name AS manufacturer_name, pl.name FROM ps_page_viewed pv LEFT JOIN ps_date_range dr ON pv.id_date_range = dr.id_date_range LEFT JOIN ps_page p ON pv.id_page = p.id_page LEFT JOIN ps_page_type pt ON pt.id_page_type = p.id_page_type LEFT JOIN ps_product_lang pl ON (p.id_page = pl.id_product and pl.id_lang='.$id_lang.') LEFT JOIN ps_product pr ON pr.id_product = p.id_object LEFT JOIN ps_image i ON (pr.id_product = i.id_product and i.position=1) LEFT JOIN ps_manufacturer m ON (m.id_manufacturer = pr.id_manufacturer) where pt.name=\'product\' AND dr.time_start > DATE_SUB(NOW(), INTERVAL 1 MONTH) AND dr.time_end < CONCAT(CURDATE(),\'23:59:59\') GROUP BY p.id_page order by total desc limit 0, '.$limit;
+        $sql = 'SELECT SUM(pv.counter) AS total, pr.*, p.*,i.id_image, m.name AS manufacturer_name, pl.name FROM ps_page_viewed pv LEFT JOIN ps_date_range dr ON pv.id_date_range = dr.id_date_range LEFT JOIN ps_page p ON pv.id_page = p.id_page LEFT JOIN ps_page_type pt ON pt.id_page_type = p.id_page_type LEFT JOIN ps_product_lang pl ON (p.id_object = pl.id_product and pl.id_lang='.$id_lang.') LEFT JOIN ps_product pr ON pr.id_product = p.id_object LEFT JOIN ps_image i ON (pr.id_product = i.id_product and i.position=1) LEFT JOIN ps_manufacturer m ON (m.id_manufacturer = pr.id_manufacturer) where pt.name=\'product\' AND dr.time_start > DATE_SUB(NOW(), INTERVAL 1 MONTH) AND dr.time_end < CONCAT(CURDATE(),\'23:59:59\') AND m.name is not null GROUP BY p.id_page order by total desc limit 0, '.$limit;
 
 
         $rq = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
@@ -111,7 +111,7 @@ class mostviews extends Module
     private function getManufacturerMostView($limit, $id_lang) {
 
 
-        $sql = 'SELECT SUM(pv.counter) AS total, p.*,  m.id_manufacturer, m.name FROM ps_page_viewed pv LEFT JOIN ps_date_range dr ON pv.id_date_range = dr.id_date_range LEFT JOIN ps_page p ON pv.id_page = p.id_page LEFT JOIN ps_page_type pt ON pt.id_page_type = p.id_page_type LEFT JOIN ps_manufacturer m ON m.id_manufacturer = p.id_object where pt.name=\'manufacturer\' AND dr.time_start > DATE_SUB(NOW(), INTERVAL 1 MONTH) AND dr.time_end < CONCAT(CURDATE(),\'23:59:59\') GROUP BY p.id_page order by total desc limit 0, '.$limit;
+        $sql = 'SELECT SUM(pv.counter) AS total, p.*,  m.id_manufacturer, m.name FROM ps_page_viewed pv LEFT JOIN ps_date_range dr ON pv.id_date_range = dr.id_date_range LEFT JOIN ps_page p ON pv.id_page = p.id_page LEFT JOIN ps_page_type pt ON pt.id_page_type = p.id_page_type LEFT JOIN ps_manufacturer m ON m.id_manufacturer = p.id_object where pt.name=\'manufacturer\' AND dr.time_start > DATE_SUB(NOW(), INTERVAL 1 MONTH) AND dr.time_end < CONCAT(CURDATE(),\'23:59:59\') AND p.id_object!=0 GROUP BY p.id_page order by total desc limit 0, '.$limit;
 
 
         $manufacturers = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);

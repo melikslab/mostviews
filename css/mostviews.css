@@ -1,6 +1,6 @@
 #mostviews h2{
 	text-align: center;
-	font-size: 17px;
+	font-size: 22px !important;
 	color: #FF4797;
     padding: 10px 10px 5px 0 !important;
     display: block;
@@ -15,6 +15,7 @@
 	overflow:hidden;
 	border-radius: 8px;
 	margin: 0 auto;
+	width: 100%;
 }
 
 #mostviews span.name {
@@ -24,3 +25,9 @@
 	margin-top: 25px;
 }
 
+/*
+@media (max-width: 530px) {
+	#mostviews .col-sm-6 .col-xs-3:last-child{
+		display: none;
+	}
+}*/
